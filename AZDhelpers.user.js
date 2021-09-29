@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AZD Helpers
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
+// @version      1.3.3
 // @description  Make AZD better for me
 // @author       You
 // @match        https://dev.azure.com/*
@@ -35,7 +35,6 @@
 
   console.log('Waiting for pull request element to modify')
 
-  const repo = location.pathname.match(/_git\/(.+)\//) ? location.pathname.match(/_git\/(.+)\//)[1] : ''
   const previewUrl = 'https://stg.ashui.com/EmberApp/'
 
   waitFor('textarea.repos-pr-create-description', element => {
@@ -50,6 +49,7 @@
   waitFor('.markdown-toolbar', elementBefore => {
     if (!document.location.href.includes('pullrequestcreate')) return
     console.log('Adding snippets')
+    const repo = location.pathname.match(/_git\/(.+)\//) ? location.pathname.match(/_git\/(.+)\//)[1] : ''
     const helper = document.createElement('input')
 
     //helper.className = 'bolt-textfield-input'
