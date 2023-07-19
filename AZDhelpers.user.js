@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AZD Helpers
 // @namespace    http://tampermonkey.net/
-// @version      1.3.3
+// @version      1.4.0
 // @description  Make AZD better for me
 // @author       You
 // @match        https://dev.azure.com/*
@@ -36,12 +36,17 @@
   console.log('Waiting for pull request element to modify')
 
   const previewUrl = 'https://stg.ashui.com/EmberApp/'
+  const previewUrlReact = 'https://stg.ashui.com/react/'
 
   waitFor('textarea.repos-pr-create-description', element => {
     //Wait a moment for things to settle
     setTimeout(() => {
-      console.log('Updating PR description', element)
-      element.value += `\n\n[Preview site](${previewUrl}${repo})`
+      console.log(`Updating PR description for ${repo}`, element)
+      if (repo.includes('react')) {
+        element.value += `\n\n[Storybook site](${previewUrlReact}${repo})`
+      } else {
+        element.value += `\n\n[Preview site](${previewUrl}${repo})`
+      }
       element.dispatchEvent(new Event('input', { bubbles: true }))
     }, 4000)
   })
@@ -54,7 +59,11 @@
 
     //helper.className = 'bolt-textfield-input'
     helper.style.color = 'Black';
-    helper.value = `[Preview site](${previewUrl}${repo})`
+    if (repo.match(/react/i)) {
+      helper.value = `[Storybook site](${previewUrlReact}${repo})`
+    } else {
+      helper.value = `[Preview site](${previewUrl}${repo})`
+    }
     helper.onfocus = function() { this.selectionStart=0; this.selectionEnd=this.value.length; document.execCommand('copy'); }
     elementBefore.parentElement.insertBefore(helper, elementBefore)
   })
